@@ -1,0 +1,238 @@
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/GridLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="4"
+    android:orientation="horizontal"
+    android:rowCount="6" >
+
+    <TextView
+        android:layout_columnSpan="4"
+        android:layout_gravity="fill"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="#FFCCCC"
+        android:text="0"
+        android:id="@+id/textview_1"
+        android:textSize="50sp" />
+
+    <Button
+        android:layout_columnSpan="2"
+        android:layout_gravity="fill"
+        android:text="回退"
+        android:id="@+id/back_btn"/>
+
+    <Button
+        android:layout_columnSpan="2"
+        android:layout_gravity="fill"
+        android:text="清空"
+        android:id="@+id/delete_btn"/>
+
+    <Button android:text="+"
+        android:layout_gravity="fill"
+
+        android:id="@+id/plus_btn"/>
+
+    <Button android:text="1"
+        android:layout_gravity="fill"
+
+        android:id="@+id/num1_btn"/>
+
+    <Button android:text="2"
+        android:layout_gravity="fill"
+        android:layout_columnSpan="1"
+        android:id="@+id/num2_btn"/>
+
+    <Button android:text="3"
+        android:layout_gravity="fill"
+        android:layout_columnSpan="1"
+        android:id="@+id/num3_btn"/>
+
+    <Button android:text="-"
+        android:layout_columnSpan="1"
+        android:id="@+id/minus_btn"/>
+
+    <Button android:text="4"
+        android:layout_columnSpan="1"
+        android:id="@+id/num4_btn"/>
+
+    <Button android:text="5"
+        android:layout_columnSpan="1"
+        android:id="@+id/num5_btn"/>
+
+    <Button android:text="6"
+        android:layout_columnSpan="1"
+        android:id="@+id/num6_btn"/>
+
+    <Button android:text="*"
+        android:layout_columnSpan="1"
+        android:id="@+id/mult_btn"/>
+
+    <Button android:text="7"
+        android:layout_columnSpan="1"
+        android:id="@+id/num7_btn"/>
+
+    <Button android:text="8"
+        android:layout_columnSpan="1"
+        android:id="@+id/num8_btn"/>
+
+    <Button android:text="9"
+        android:layout_columnSpan="1"
+        android:id="@+id/num9_btn"/>
+
+    <Button android:text="/"
+        android:layout_columnSpan="1"
+        android:id="@+id/divide_btn"/>
+
+    <Button
+        android:layout_columnSpan="1"
+        android:text="."
+        android:id="@+id/dot_btn"/>
+
+    <Button android:text="0"
+        android:layout_columnSpan="1"
+        android:id="@+id/num0_btn"/>
+
+    <Button android:text="="
+        android:layout_columnSpan="1"
+        android:id="@+id/result_btn"/>
+
+    <Button android:text="("
+        android:layout_columnSpan="2"
+        android:layout_gravity="fill_horizontal"
+        android:id="@+id/left_btn"/>
+
+    <Button android:text=")"
+        android:layout_columnSpan="2"
+        android:layout_gravity="fill_horizontal"
+        android:id="@+id/right_btn"/>
+
+</GridLayout>
+
+
+    <!--<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:id="@+id/GridLayout1"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:columnCount="4"-->
+<!--    android:orientation="horizontal"-->
+<!--    android:rowCount="6" >-->
+
+<!--    <TextView-->
+<!--        android:layout_columnSpan="4"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_centerVertical="true"-->
+<!--        android:layout_gravity="fill"-->
+<!--        android:layout_marginLeft="5dp"-->
+<!--        android:layout_marginRight="5dp"-->
+<!--        android:id="@+id/textview_1"-->
+<!--        android:text=""-->
+<!--        android:background="@drawable/rectborder"-->
+<!--        android:textSize="80sp" />-->
+
+<!--    <Button-->
+<!--        android:layout_columnSpan="2"-->
+<!--        android:layout_gravity="fill"-->
+<!--        android:textSize="60sp"-->
+<!--        android:layout_marginLeft="5dp"-->
+<!--        android:id="@+id/back_btn"-->
+<!--        android:text="回退" />-->
+
+<!--    <Button-->
+<!--        android:layout_columnSpan="2"-->
+<!--        android:textSize="60sp"-->
+<!--        android:layout_marginRight="5dp"-->
+<!--        android:layout_gravity="fill"-->
+<!--        android:id="@+id/delete_btn"-->
+<!--        android:text="清空" />-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:layout_marginLeft="5dp"-->
+<!--        android:id="@+id/plus_btn"-->
+<!--        android:text="+" />-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:id="@+id/num1_btn"-->
+<!--        android:text="@string/_1" />-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:id="@+id/num2_btn"-->
+<!--        android:text="@string/_2" />-->
+
+<!--    <Button-->
+<!--        android:layout_marginEnd="5dp"-->
+<!--        android:textSize="60sp"-->
+<!--        android:id="@+id/num3_btn"-->
+<!--        android:text="@string/_3" />-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:layout_marginStart="5dp"-->
+<!--        android:text="@string/jian"-->
+<!--        android:id="@+id/minus_btn"/>-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:text="@string/_4"-->
+<!--        android:id="@+id/num4_btn"/>-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:id="@+id/num5_btn"-->
+<!--        android:text="@string/_5" />-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:layout_marginEnd="5dp"-->
+<!--        android:text="@string/_6"-->
+<!--        android:id="@+id/num6_btn"/>-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:layout_marginStart="5dp"-->
+<!--        android:id="@+id/mult_btn"-->
+<!--        android:text="@string/cheng" />-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:id="@+id/num7_btn"-->
+<!--        android:text="@string/_7" />-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:id="@+id/num8_btn"-->
+<!--        android:text="@string/_8" />-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:layout_marginEnd="5dp"-->
+<!--        android:id="@+id/num9_btn"-->
+<!--        android:text="@string/_9" />-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:layout_marginStart="5dp"-->
+<!--        android:id="@+id/divide_btn"-->
+<!--        android:text="@string/chu" />-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:id="@+id/dot_btn"-->
+<!--        android:text="@string/dot" />-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:id="@+id/num0_btn"-->
+<!--        android:text="@string/_0" />-->
+
+<!--    <Button-->
+<!--        android:textSize="60sp"-->
+<!--        android:id="@+id/result_btn"-->
+<!--        android:text="=" />-->
+
+<!--</GridLayout>-->
