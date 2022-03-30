@@ -63,6 +63,7 @@
 
     <Button android:text="6"
         android:layout_columnSpan="1"
+        android:layout_gravity="fill_horizontal"
         android:id="@+id/num6_btn"/>
 
     <Button android:text="*"
@@ -79,6 +80,7 @@
 
     <Button android:text="9"
         android:layout_columnSpan="1"
+        android:layout_gravity="fill_horizontal"
         android:id="@+id/num9_btn"/>
 
     <Button android:text="/"
@@ -96,6 +98,7 @@
 
     <Button android:text="="
         android:layout_columnSpan="1"
+        android:layout_gravity="fill_horizontal"
         android:id="@+id/result_btn"/>
 
     <Button android:text="("

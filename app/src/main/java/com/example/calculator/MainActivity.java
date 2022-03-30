@@ -2,10 +2,12 @@ package com.example.calculator;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
@@ -31,10 +33,20 @@ public class MainActivity extends AppCompatActivity {
     private Button minus_btn;
     private Button left_btn;
     private Button right_btn;
+    private Button blank_btn;
 
     private TextView textview_1;
     //"("的标志,等于0在堆栈外,等于一在堆栈内
     private int flag = 0;
+    //
+    private List<String> expression_list;
+    private List<String> after_expression_list;
+    private String expression;
+    private String after_expression;
+    private Stack<String> stack1;
+    private Stack<String> stack2;
+    private List<String> str1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         right_btn = (Button) findViewById(R.id.right_btn);
 
         textview_1 = (TextView) findViewById(R.id.textview_1);
+
+
 
         num0_btn.setOnClickListener(new View.OnClickListener() {
 
@@ -195,67 +209,75 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textview_1.setText(textview_1.getText().toString().substring(0, textview_1.getText().toString().length()-1));
+            }
+        });
+
         result_btn.setOnClickListener(new View.OnClickListener() //匿名接口实现类
         {
-            String after_expression = "";
-            String[] expression_list;
-            List<String> str1;
-            String expression;
             @Override
             public void onClick(View view) {
-                //输入的表达式
+                //初始化成员变量
                 expression = textview_1.getText().toString();
-                //操作符优先级
-                str1 = Arrays.asList("+", "-", "*", "/", "(", ")", "^", "%");
+                after_expression = "";
+                expression_list = split(expression, "[/*+)(-]");
+                str1 = Arrays.asList("+", "-", "*", "/","(",")", "^", "%");
                 //设计栈进行操作
-                Stack<String> stack1 = new Stack<>();
-                Stack<String> stack2 = new Stack<>();
+                stack1 = new Stack<>();
+                stack2 = new Stack<>();
                 //得到后缀表达式，用一个栈
-                initStack1(stack1);
+                initStack1();
                 //计算后缀表达式，再用一个栈
-                initStack2(stack2);
-                //在textview返回结果
+                initStack2();
+                //返回结果
                 textview_1.setText(stack2.pop());
             }
-            public void initStack1(Stack<String> stack1){
-                expression_list = expression.split("");
-                for (int i = 0; i < expression_list.length; i++) {
+
+            private void initStack1() {
+                for(int i = 0; i < expression_list.size() ; i++){
                     //运算数
-                    if (!str1.contains(expression_list[i])) {
-                        if (expression_list[i].equals(".")) {
+                    if (!str1.contains(expression_list.get(i))){
+                        if (expression_list.get(i).equals(".")){
                             //暂时不考虑小数
 //                            String temp = stack1.pop();
 //                            temp += expression_list[i+1];
+//
 //                            i += 1;
-                        } else {
-                            after_expression += expression_list[i];
+
+                        } else{
+                            after_expression = after_expression + "(" + expression_list.get(i) + ")";
                         }
 
-                    } else {
+                    } else{
                         //操作符
                         //优先级高
-                        if (stack1.isEmpty() || getPriority(expression_list[i]) > getPriority(stack1.lastElement())) {
-                            stack1.push(expression_list[i]);
-                            if (expression_list[i].equals("(")) {
+                        if (stack1.isEmpty() || getPriority(expression_list.get(i)) > getPriority(stack1.lastElement())){
+                            stack1.push(expression_list.get(i));
+                            if (expression_list.get(i).equals("(")){
                                 flag += 1;//如果是放入"(",放入的时候降低优先级
                             }
-                        } else if (expression_list[i].equals(")")) {
-                            while (!stack1.lastElement().equals("(")) {
+                        }
+                        else if (expression_list.get(i).equals(")")){
+                            while(!stack1.lastElement().equals("(")){
                                 after_expression += stack1.pop();//不断弹出
 
-                                if (stack1.lastElement().equals("(")) {
+                                if (stack1.lastElement().equals("(")){
                                     String temp = stack1.pop();//弹出“（”
                                     break;
                                 }
                             }
 
-                        } else {
+                        }
+                        else {
                             //优先级低
-                            while (!stack1.isEmpty() || getPriority(stack1.lastElement()) >= getPriority(expression_list[i])) {
+                            while(!stack1.isEmpty() || getPriority(stack1.lastElement()) >= getPriority(expression_list.get(i))){
                                 //取出所有优先级低的
                                 after_expression += stack1.pop();
                                 //到“（“暂停
-                                if (stack1.isEmpty() || stack1.lastElement().equals("(")) {
+                                if (stack1.isEmpty() ||stack1.lastElement().equals("(")){
                                     break;
                                 }
 
@@ -265,20 +287,21 @@ public class MainActivity extends AppCompatActivity {
 //                            after_expression += stack1.pop();
 //                        }
                             }
-                            stack1.push(expression_list[i]);
+                            stack1.push(expression_list.get(i));
 
                         }
                     }
                 }
-                while (!stack1.isEmpty()) {
+                while(!stack1.isEmpty() ){
                     //直到stack1为空
                     after_expression += stack1.pop();
                 }
             }
-            private void initStack2(Stack<String> stack2) {
-                String[] after_expression_list = after_expression.split("");
-                for (String e : after_expression_list) {
-                    if (str1.contains(e)) {
+
+            private void initStack2() {
+                after_expression_list = split2(after_expression, "[/*+)(-]");
+                for (String e : after_expression_list){
+                    if (str1.contains(e)){
                         //操作符
                         double i1 = Double.parseDouble(stack2.pop());
                         double i2 = Double.parseDouble(stack2.pop());
@@ -290,9 +313,29 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
+
+            public double calculateNumbers(double num1, double num2, String operator) {
+                switch(operator) {
+                    case "+":
+                        return num1 + num2;
+                    case "-":
+                        return num1 - num2;
+                    case "*":
+                        return num1 * num2;
+                    case "/":
+                        return num1 / num2;
+                    case "%":
+                        return num1 % num2;
+//            case "^":
+//                return num1 ^ num2;
+                }
+                return 0;
+            }
+
+
             private int getPriority(String firstElement) {
                 int priority = 0;
-                switch (firstElement) {
+                switch (firstElement){
                     case "+":
                         return 1;
                     case "-":
@@ -309,23 +352,337 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return 0;
             }
-            public Double calculateNumbers(double num1, double num2, String operator) {
-                switch (operator) {
-                    case "+":
-                        return num1 + num2;
-                    case "-":
-                        return num1 - num2;
-                    case "*":
-                        return num1 * num2;
-                    case "/":
-                        return num1 / num2;
-                    case "%":
-                        return num1 % num2;
-//                    case "^":
-//                        return num1 ^ num2;
+
+            public ArrayList<String> split(String s, String regex){
+                ArrayList<String> arr= new ArrayList<String> ();
+                int i=0,j=0;//i记录的是s的从第一个字符到第一个分隔符的长度
+                while(i < s.length())
+                {
+                    if (s.substring(i, i+1).matches(regex)){
+                        //i字符匹配正则表达式
+                        if(i != 0){
+                            //有之前的内容
+                            arr.add(s.substring(0, i));
+                            j++;//arr第j个元素
+                            arr.add(s.substring(i, i+1));
+                            j++;
+                            s = s.substring(i+1);
+                            //从新的s的第一个元素开始遍历
+                            i = 0;
+                        } else{
+                            arr.add(s.substring(i, i+1));
+                            j++;
+                            s = s.substring(i+1);
+                            //从新的s的第一个元素开始遍历
+                            i = 0;
+                        }
+                        //表达式之前内容装入，表达式装入，表达式之后装入
+                    } else{
+                        //不匹配
+                        i++;
+                    }
                 }
-                return null;
+                //最后一定只剩下不满足通配符的内容，但是可能为空
+                arr.add(s);
+                j++;
+                ArrayList<String> trimed_arr = new ArrayList<>(arr.size()); //定义新的字符串数组，存放newStringArray修剪后的内容，保证输出无空值
+                for (String value : arr) {
+                    if (value != null && !value.equals(""))
+                        trimed_arr.add(value);
+                }
+                return trimed_arr;
             }
+
+            public ArrayList<String> split2(String s, String regex){
+                ArrayList<String> arr= new ArrayList<String> ();
+                int i=0,j=0;//i记录的是s的从第一个字符到第一个分隔符的长度
+                while(i < s.length())
+                {
+                    if (s.substring(i, i+1).matches(regex)){
+                        //i字符匹配正则表达式
+                        if(i != 0){
+                            //有之前的内容
+                            arr.add(s.substring(0, i));
+                            j++;//arr第j个元素
+                            //把（）排除在外
+                            if (s.charAt(i) != '(' && s.charAt(i) != ')'){
+                                arr.add(s.substring(i, i+1));
+                            }
+                            j++;
+                            s = s.substring(i+1);
+                            //从新的s的第一个元素开始遍历
+                            i = 0;
+                        } else{
+                            if (s.charAt(i) != '(' && s.charAt(i) != ')'){
+                                arr.add(s.substring(i, i+1));
+                            }
+                            s = s.substring(i+1);
+                            //从新的s的第一个元素开始遍历
+                            i = 0;
+                        }
+                        //表达式之前内容装入，表达式装入，表达式之后装入
+                    } else{
+                        //不匹配
+                        i++;
+                    }
+                }
+                //最后一定只剩下不满足通配符的内容，但是可能为空
+                arr.add(s);
+                j++;
+
+                ArrayList<String> trimed_arr = new ArrayList<>(arr.size()); //定义新的字符串数组，存放newStringArray修剪后的内容，保证输出无空值
+                for (String value : arr) {
+                    if (value != null && !value.equals(""))
+                        trimed_arr.add(value);
+                }
+                return trimed_arr;
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//            public void initStack1(Stack<String> stack1){
+//                expression_list = split(expression, "[/*+)(-]");
+//                for (int i = 0; i < expression_list.size(); i++) {
+//                    //运算数
+//                    if (!str1.contains(expression_list.get(i))) {
+//                        if (expression_list.get(i).equals(".")) {
+//                            //暂时不考虑小数
+////                            String temp = stack1.pop();
+////                            temp += expression_list[i+1];
+////                            i += 1;
+//                        } else {
+//                            after_expression += expression_list.get(i);
+//                        }
+//
+//                    } else {
+//                        //操作符
+//                        //优先级高
+//                        if (stack1.isEmpty() || getPriority(expression_list.get(i)) > getPriority(stack1.lastElement())) {
+//                            stack1.push(expression_list.get(i));
+//                            if (expression_list.get(i).equals("(")) {
+//                                flag += 1;//如果是放入"(",放入的时候降低优先级
+//                            }
+//                        } else if (expression_list.get(i).equals(")")) {
+//                            while (!stack1.lastElement().equals("(")) {
+//                                after_expression += stack1.pop();//不断弹出
+//
+//                                if (stack1.lastElement().equals("(")) {
+//                                    String temp = stack1.pop();//弹出“（”
+//                                    break;
+//                                }
+//                            }
+//
+//                        } else {
+//                            //优先级低
+//                            while (!stack1.isEmpty() || getPriority(stack1.lastElement()) >= getPriority(expression_list.get(i))) {
+//                                //取出所有优先级低的
+//                                after_expression += stack1.pop();
+//                                //到“（“暂停
+//                                if (stack1.isEmpty() || stack1.lastElement().equals("(")) {
+//                                    break;
+//                                }
+//
+////                        if (stack1.lastElement().equals("(")){
+////                            break;
+////                        } else{
+////                            after_expression += stack1.pop();
+////                        }
+//                            }
+//                            stack1.push(expression_list.get(i));
+//
+//                        }
+//                    }
+//                }
+//                while (!stack1.isEmpty()) {
+//                    //直到stack1为空
+//                    after_expression += stack1.pop();
+//                }
+//            }
+//            private void initStack2(Stack<String> stack2) {
+//                after_expression_list = new ArrayList<>();
+//                after_expression_list.add("1");
+//                after_expression_list.add("+");
+//                after_expression_list.add("2");
+//                after_expression_list.add("*");
+//                after_expression_list.add("6");
+//                for (String e : after_expression_list) {
+//                    if (str1.contains(e)) {
+//                        //操作符
+//                        double i1 = Double.parseDouble(stack2.pop());
+//                        double i2 = Double.parseDouble(stack2.pop());
+//                        double i3 = calculateNumbers(i2, i1, e);
+//                        stack2.push(String.valueOf(i3));//把新数据插入当中
+//                    } else {
+//                        //运算数
+//                        stack2.push(e);
+//                    }
+//                }
+//            }
+//            private int getPriority(String firstElement) {
+//                int priority = 0;
+//                switch (firstElement) {
+//                    case "+":
+//                        return 1;
+//                    case "-":
+//                        return 1;
+//                    case "*":
+//                        return 2;
+//                    case "/":
+//                        return 2;
+//                    case "(":
+//                        priority = flag == 0 ? 5 : 0;
+//                        return priority;
+//                    default:
+//                        break;
+//                }
+//                return 0;
+//            }
+//            public double calculateNumbers(double num1, double num2, String operator) {
+//                switch (operator) {
+//                    case "+":
+//                        return num1 + num2;
+//                    case "-":
+//                        return num1 - num2;
+//                    case "*":
+//                        return num1 * num2;
+//                    case "/":
+//                        return num1 / num2;
+//                    case "%":
+//                        return num1 % num2;
+////                    case "^":
+////                        return num1 ^ num2;
+//                }
+//                return 0;
+//            }
+//            public ArrayList<String> split(String s, String regex){
+//                ArrayList<String> arr= new ArrayList<String> ();
+//                int i=0,j=0;//i记录的是s的从第一个字符到第一个分隔符的长度
+//                while(i < s.length())
+//                {
+//                    if (s.substring(i, i+1).matches(regex)){
+//                        //i字符匹配正则表达式
+//                        if(i != 0){
+//                            //有之前的内容
+//                            arr.add(s.substring(0, i));
+//                            j++;//arr第j个元素
+//                            arr.add(s.substring(i, i+1));
+//                            j++;
+//                            s = s.substring(i+1);
+//                            //从新的s的第一个元素开始遍历
+//                            i = 0;
+//                        } else{
+//                            arr.add(s.substring(i, i+1));
+//                            j++;
+//                            s = s.substring(i+1);
+//                            //从新的s的第一个元素开始遍历
+//                            i = 0;
+//                        }
+//                        //表达式之前内容装入，表达式装入，表达式之后装入
+//                    } else{
+//                        //不匹配
+//                        i++;
+//                    }
+//                }
+//                //最后一定只剩下不满足通配符的内容，但是可能为空
+//                arr.add(s);
+//                j++;
+//                ArrayList<String> trimed_arr = new ArrayList<>(arr.size()); //定义新的字符串数组，存放newStringArray修剪后的内容，保证输出无空值
+//                for (String value : arr) {
+//                    if (value != null && !value.equals(""))
+//                        trimed_arr.add(value);
+//                }
+//                return trimed_arr;
+//            }
+//            public ArrayList<String> split2(String s, String regex){
+//                ArrayList<String> arr= new ArrayList<String> ();
+//                int i=0,j=0;//i记录的是s的从第一个字符到第一个分隔符的长度
+//                while(i < s.length())
+//                {
+//                    if (s.substring(i, i+1).matches(regex)){
+//                        //i字符匹配正则表达式
+//                        if(i != 0){
+//                            //有之前的内容
+//                            arr.add(s.substring(0, i));
+//                            j++;//arr第j个元素
+//                            //把（）排除在外
+//                            if (s.charAt(i) != '(' && s.charAt(i) != ')'){
+//                                arr.add(s.substring(i, i+1));
+//                            }
+//                            j++;
+//                            s = s.substring(i+1);
+//                            //从新的s的第一个元素开始遍历
+//                            i = 0;
+//                        } else{
+//                            if (s.charAt(i) != '(' && s.charAt(i) != ')'){
+//                                arr.add(s.substring(i, i+1));
+//                            }
+//                            s = s.substring(i+1);
+//                            //从新的s的第一个元素开始遍历
+//                            i = 0;
+//                        }
+//                        //表达式之前内容装入，表达式装入，表达式之后装入
+//                    } else{
+//                        //不匹配
+//                        i++;
+//                    }
+//                }
+//                //最后一定只剩下不满足通配符的内容，但是可能为空
+//                arr.add(s);
+//                j++;
+//
+//                ArrayList<String> trimed_arr = new ArrayList<>(arr.size()); //定义新的字符串数组，存放newStringArray修剪后的内容，保证输出无空值
+//                for (String value : arr) {
+//                    if (value != null && !value.equals(""))
+//                        trimed_arr.add(value);
+//                }
+//                return trimed_arr;
+//            }
         });
     }
 }
